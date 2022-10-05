@@ -2,7 +2,7 @@
 
 This repo is a placeholder to maintain Dropbox API Postman Collection. See uploaded file.
 
-This repository is created to perform UI test automation of [orange hrm project](https://opensource-demo.orangehrmlive.coms).
+This repository is created to perform API test automation of [dropbox api postman collection](https://opensource-demo.orangehrmlive.coms).
 
 [![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6?action=collection%2Ffork&collection-url=entityId%3D16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6%26entityType%3Dcollection%26workspaceId%3Dfbdea7d7-a03d-4269-8090-270c57da2e0a)
 
@@ -12,7 +12,6 @@ Please follow this tutorial to import this [Postman Collection](https://www.getp
 
 ##Keys used in APIs:
 
-- MGMTSVR - Management server protocol and hostname (e.g., https://yourOrg-yourEnv.apigee.net)
 - ORG - organization
 - ENV - environment
 - API - API name
@@ -22,7 +21,7 @@ Please follow this tutorial to import this [Postman Collection](https://www.getp
 
 ## Technology and dependencies used:
 
-- Postman (https://webdriver.io)
+- Postman
 - Javascript (https://www.javascript.com/)
 - Newman
 
@@ -51,3 +50,5 @@ Due to time constraint, there are some aspects need further inspection and devel
 - Using regular expression to validate password.
 
 ## Repository
+
+- https://github.com/tamtran2885/postman_workflows_with_dropbox_apis
