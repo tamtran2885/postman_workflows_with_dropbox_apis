@@ -52,3 +52,52 @@ Due to time constraint, there are some aspects need further inspection and devel
 ## Repository
 
 - https://github.com/tamtran2885/postman_workflows_with_dropbox_apis
+
+```javascript
+pm.environment.set("App_key", "7l2oaclsvnop3hz");
+pm.environment.set("App_secret", "88r0zo6aqgxkxbj");
+pm.environment.set("Auth_url", "https://www.dropbox.com/oauth2/authorize");
+pm.environment.set(
+  "Access_token_url",
+  "https://api.dropboxapi.com/oauth2/token"
+);
+
+pm.sendRequest(
+  {
+    url: pm.environment.get("Access_token_url"),
+    method: "POST",
+    header: {
+      Accept: "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
+      Authorization: pm.environment.get("Auth_url"),
+    },
+    body: {
+      mode: "urlencoded",
+      urlencoded: [
+        { key: "grant_type", value: "refresh_token", disabled: false },
+        {
+          key: "client_id",
+          value: pm.environment.get("App_key"),
+          disabled: false,
+        },
+        {
+          key: "client_secret",
+          value: pm.environment.get("App_secret"),
+          disabled: false,
+        },
+        {
+          key: "refresh_token",
+          value: pm.environment.get("refresh_token"),
+          disabled: false,
+        },
+      ],
+    },
+  },
+  (err, res) => {
+    pm.environment.set("access_token", res.json().access_token);
+    pm.environment.set("refresh_token", res.json().refresh_token);
+    pm.environment.set("token_created_at", res.json().created_at);
+    console.log(res.json());
+  }
+);
+```

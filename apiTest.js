@@ -2,8 +2,8 @@ const newman = require("newman");
 
 newman.run(
   {
-    collection: require("./Workflow_With_Dropbox_APIs.postman_collection.json"),
-    environment: require("./Dropbox_env.postman_environment.json"),
+    collection: require(COLLECTION_JSON_FILE),
+    environment: require(ENVIRONMENT_JSON_FILE),
     reporters: "cli",
   },
   function (err) {

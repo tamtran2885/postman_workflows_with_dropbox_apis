@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./apiTest.js",
-    "collection": "npx newman run https://www.getpostman.com/collections/6a9ef54ff34787984047"
+    "test": "node ./apiTest.js"
   },
   "keywords": [],
   "author": "",
