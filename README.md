@@ -53,6 +53,8 @@ Due to time constraint, there are some aspects need further inspection and devel
 
 - https://github.com/tamtran2885/postman_workflows_with_dropbox_apis
 
+## Collection Pre-request script
+
 ```javascript
 pm.environment.set("App_key", "7l2oaclsvnop3hz");
 pm.environment.set("App_secret", "88r0zo6aqgxkxbj");
@@ -61,8 +63,6 @@ pm.environment.set(
   "Access_token_url",
   "https://api.dropboxapi.com/oauth2/token"
 );
-
-## Pre-request script
 
 pm.sendRequest(
   {
