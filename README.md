@@ -62,6 +62,8 @@ pm.environment.set(
   "https://api.dropboxapi.com/oauth2/token"
 );
 
+## Pre-request script
+
 pm.sendRequest(
   {
     url: pm.environment.get("Access_token_url"),
