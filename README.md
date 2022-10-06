@@ -1,29 +1,23 @@
 # dropbox-api-postman collection
 
-This repo is a placeholder to maintain Dropbox API Postman Collection. See uploaded file.
-
-This repository is created to perform API test automation of [dropbox api postman collection](https://opensource-demo.orangehrmlive.coms).
-
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6?action=collection%2Ffork&collection-url=entityId%3D16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6%26entityType%3Dcollection%26workspaceId%3Dfbdea7d7-a03d-4269-8090-270c57da2e0a)
+This repo is a placeholder to maintain Dropbox API Postman Collection.
 
 Please follow this tutorial to import this [Postman Collection](https://www.getpostman.com/docs/collections).
 
 ![Postman](./apigee-edge-mgmt-api-postman-collection.png)
 
-##Keys used in APIs:
+## Keys used in APIs:
 
-- ORG - organization
-- ENV - environment
-- API - API name
-- BASICAUTH - Basic Auth header consisting of base64(admin id:admin pwd)
-- PROTO - protocol
-- HOST - hostname
+- App_key -
+- App_secret -
+- Auth_url -
+- Access_token_url -
 
 ## Technology and dependencies used:
 
 - Postman
 - Javascript (https://www.javascript.com/)
-- Newman
+- Newman - optional
 
 ## Install and Set up repository:
 
@@ -34,44 +28,35 @@ Please follow this tutorial to import this [Postman Collection](https://www.getp
 
 To run our test suite:
 
-- Open terminal
-- Navigate to the folder where the project is located.
-- Run "npm run test"
+1. Fork the collection from public workspace
 
-## Generate report with allure:
+[![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6?action=collection%2Ffork&collection-url=entityId%3D16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6%26entityType%3Dcollection%26workspaceId%3Dfbdea7d7-a03d-4269-8090-270c57da2e0a)
 
-- Run "allure generate allure-results/ && allure open"
+2. This collection uses Collection variables which are only appealed to all the requests within this collection.
+
+3. Generate Access Token using OAuth 2
+
+- Open the authorization tab
+
+- Press "Request Token" and a new window will open up asking for your credentials
+
+4. Inside every request, check Authorization tab to make sure option "Inherit from parent" is chosen
 
 ## Further development:
 
-Due to time constraint, there are some aspects need further inspection and development to improve the project's quality including:
+- The author of this application has tried to create a pre-request script to generate a OAuth2 token automatically when running test. However, the script didn't work well.
 
-- Most of tests are performed using Implicit Wait which will add time to the test script execution time. In other to troubleshoot this issue, an Explicit Wait should be applied.
-- Using regular expression to validate password.
-
-## Repository
-
-- https://github.com/tamtran2885/postman_workflows_with_dropbox_apis
-
-## Collection Pre-request script
+### Collection Pre-request script
 
 ```javascript
-pm.environment.set("App_key", "7l2oaclsvnop3hz");
-pm.environment.set("App_secret", "88r0zo6aqgxkxbj");
-pm.environment.set("Auth_url", "https://www.dropbox.com/oauth2/authorize");
-pm.environment.set(
-  "Access_token_url",
-  "https://api.dropboxapi.com/oauth2/token"
-);
-
 pm.sendRequest(
   {
-    url: pm.environment.get("Access_token_url"),
+    url: pm.variables.get("Access_token_url"),
     method: "POST",
     header: {
       Accept: "application/json",
       "Content-Type": "application/x-www-form-urlencoded",
-      Authorization: pm.environment.get("Auth_url"),
+      Authorization: pm.variables.get("Auth_url"),
     },
     body: {
       mode: "urlencoded",
@@ -79,17 +64,17 @@ pm.sendRequest(
         { key: "grant_type", value: "refresh_token", disabled: false },
         {
           key: "client_id",
-          value: pm.environment.get("App_key"),
+          value: pm.variables.get("App_key"),
           disabled: false,
         },
         {
           key: "client_secret",
-          value: pm.environment.get("App_secret"),
+          value: pm.variables.get("App_secret"),
           disabled: false,
         },
         {
           key: "refresh_token",
-          value: pm.environment.get("refresh_token"),
+          value: pm.variables.get("refresh_token"),
           disabled: false,
         },
       ],
@@ -103,3 +88,7 @@ pm.sendRequest(
   }
 );
 ```
+
+## Repository
+
+- https://github.com/tamtran2885/postman_workflows_with_dropbox_apis
