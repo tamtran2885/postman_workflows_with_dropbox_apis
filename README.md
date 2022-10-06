@@ -80,7 +80,7 @@ pm.sendRequest(
 
 #### 2. Running collections on the command line with Newman
 
-According to the materials, we can use Newman to run collection with file uploads. However, how can I keep updating the token which will be expired a certain period of time ?
+According to the materials, we can use Newman to run collection with file uploads. However, how can I keep updating the token which will be expired after a certain period of time ?
 
 ## Reference:
 
