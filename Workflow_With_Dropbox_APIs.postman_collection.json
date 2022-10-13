@@ -1,0 +1,560 @@
+{
+	"info": {
+		"_postman_id": "108a4f17-d9aa-411a-851d-1ad106bc2da6",
+		"name": "Workflow_With_Dropbox_APIs",
+		"description": "[![Run in Postman](https://run.pstmn.io/button.svg)](https://god.gw.postman.com/run-collection/16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6?action=collection%2Ffork&collection-url=entityId%3D16978833-108a4f17-d9aa-411a-851d-1ad106bc2da6%26entityType%3Dcollection%26workspaceId%3Dfbdea7d7-a03d-4269-8090-270c57da2e0a)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16978833"
+	},
+	"item": [
+		{
+			"name": "Negative test cases",
+			"item": [
+				{
+					"name": "Get meta_data of unavailable file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check properties of response\", function () {   \r",
+									"    pm.expect(jsonData).not.to.have.property(\"name\");\r",
+									"    pm.expect(jsonData).not.to.have.property(\"id\");\r",
+									"    pm.expect(jsonData).not.to.have.property(\"id\");\r",
+									"    pm.expect(jsonData).to.have.property(\"error\");\r",
+									"})\r",
+									"\r",
+									"pm.test(\"Check Json value of error\", function () {\r",
+									"    pm.expect(jsonData.error_summary).to.include(\"path/not_found/\");\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <get access token>"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"include_deleted\":false,\r\n    \"include_has_explicit_shared_members\":false,\r\n    \"include_media_info\":false,\r\n    \"path\":\"/upload_file.txt\"\r\n}"
+						},
+						"url": {
+							"raw": "https://api.dropboxapi.com/2/files/get_metadata",
+							"protocol": "https",
+							"host": [
+								"api",
+								"dropboxapi",
+								"com"
+							],
+							"path": [
+								"2",
+								"files",
+								"get_metadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete unavailable file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Check Json value of error\", function () {\r",
+									"    pm.expect(jsonData.error_summary).to.include(\"path_lookup/not_found/\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check metadata property of response\", function () {\r",
+									"    pm.expect(jsonData).not.to.have.property(\"metadata\");\r",
+									"})\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <get access token>"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"path\":\"/upload_file.txt\"}"
+						},
+						"url": {
+							"raw": "https://api.dropboxapi.com/2/files/delete_v2",
+							"protocol": "https",
+							"host": [
+								"api",
+								"dropboxapi",
+								"com"
+							],
+							"path": [
+								"2",
+								"files",
+								"delete_v2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{access_token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Status code is not 200\", function () {",
+							"    pm.response.to.have.status(409);",
+							"});",
+							"",
+							"pm.test(\"File not found\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"not_found\");",
+							"});"
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Test cases",
+			"item": [
+				{
+					"name": "Get list of folders",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Correct folders and folder names are returned \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"folder\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"Homework\");\r",
+									"    pm.expect(pm.response.text()).to.include(\"Demo\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"include_deleted\": false,\r\n    \"include_has_explicit_shared_members\": false,\r\n    \"include_media_info\": false,\r\n    \"include_mounted_folders\": true,\r\n    \"include_non_downloadable_files\": true,\r\n    \"path\": \"\",\r\n    \"recursive\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://api.dropboxapi.com/2/files/list_folder",
+							"protocol": "https",
+							"host": [
+								"api",
+								"dropboxapi",
+								"com"
+							],
+							"path": [
+								"2",
+								"files",
+								"list_folder"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Correct name is returned \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"upload_file.txt\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Json value of response\", function () {\r",
+									"    pm.expect(jsonData.name).to.include(\"upload_file\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check properties of response\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData).to.have.property(\"is_downloadable\");\r",
+									"})\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"warning": "This is a duplicate header and will be overridden by the Authorization header generated by Postman.",
+								"key": "Authorization",
+								"value": "Bearer <get access token>"
+							},
+							{
+								"key": "Dropbox-API-Arg",
+								"value": "{\"autorename\":false,\"mode\":\"add\",\"mute\":false,\"path\":\"/Demo/upload_file.txt\",\"strict_conflict\":false}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/octet-stream"
+							}
+						],
+						"body": {
+							"mode": "file",
+							"file": {
+								"src": "/D:/epam-course/practices/Home_tasks/home_task-3/new_file.txt"
+							}
+						},
+						"url": {
+							"raw": "https://content.dropboxapi.com/2/files/upload",
+							"protocol": "https",
+							"host": [
+								"content",
+								"dropboxapi",
+								"com"
+							],
+							"path": [
+								"2",
+								"files",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get file's meta_data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Correct name is returned \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"upload_file.txt\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Json value of response\", function () {\r",
+									"    pm.expect(jsonData.name).to.include(\"upload_file\");\r",
+									"    pm.expect(jsonData.path_display).to.include(\"/Demo/upload_file.txt\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check properties of response\", function () {\r",
+									"    pm.expect(jsonData).to.have.property(\"is_downloadable\");\r",
+									"    pm.expect(jsonData).to.have.property(\"id\");\r",
+									"    pm.expect(jsonData).to.have.property(\"size\");\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <get access token>"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"include_deleted\":false,\r\n    \"include_has_explicit_shared_members\":false,\r\n    \"include_media_info\":false,\r\n    \"path\":\"/Demo/upload_file.txt\"\r\n}"
+						},
+						"url": {
+							"raw": "https://api.dropboxapi.com/2/files/get_metadata",
+							"protocol": "https",
+							"host": [
+								"api",
+								"dropboxapi",
+								"com"
+							],
+							"path": [
+								"2",
+								"files",
+								"get_metadata"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json()\r",
+									"\r",
+									"pm.test(\"Correct name is returned \", function () {\r",
+									"    pm.expect(pm.response.text()).to.include(\"upload_file.txt\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check Json value of response\", function () {\r",
+									"    pm.expect(jsonData.metadata.name).to.include(\"upload_file\");\r",
+									"    pm.expect(jsonData.metadata.path_display).to.include(\"/Demo/upload_file.txt\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Check properties of response\", function () {\r",
+									"    pm.expect(jsonData.metadata).to.have.property(\"is_downloadable\");\r",
+									"    pm.expect(jsonData.metadata).to.have.property(\"id\");\r",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer <get access token>"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"path\":\"/Demo/upload_file.txt\"}"
+						},
+						"url": {
+							"raw": "https://api.dropboxapi.com/2/files/delete_v2",
+							"protocol": "https",
+							"host": [
+								"api",
+								"dropboxapi",
+								"com"
+							],
+							"path": [
+								"2",
+								"files",
+								"delete_v2"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "useBrowser",
+				"value": true,
+				"type": "boolean"
+			},
+			{
+				"key": "client_authentication",
+				"value": "body",
+				"type": "string"
+			},
+			{
+				"key": "clientSecret",
+				"value": "{{App_secret}}",
+				"type": "string"
+			},
+			{
+				"key": "clientId",
+				"value": "{{App_key}}",
+				"type": "string"
+			},
+			{
+				"key": "accessTokenUrl",
+				"value": "{{Access_token_url}}",
+				"type": "string"
+			},
+			{
+				"key": "authUrl",
+				"value": "{{Auth_url}}",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.test(\"Response time is less than 2000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(2000);",
+					"});",
+					"",
+					"pm.test(\"Content-Type is present\", function () {",
+					"    pm.response.to.have.header(\"Content-Type\", \"application/json\");",
+					"});",
+					"",
+					"",
+					""
+				]
+			}
+		}
+	]
+}

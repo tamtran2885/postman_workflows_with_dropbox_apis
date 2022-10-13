@@ -4,12 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node ./apiTest.js"
+    "collection": "npx newman run Workflow_With_Dropbox_APIs.postman_collection.json -e Dropbox_env.postman_environment.json",
+    "report": "npx newman run Workflow_With_Dropbox_APIs.postman_collection.json -e Dropbox_env.postman_environment.json -r html",
+    "report-extra": "npx newman run Workflow_With_Dropbox_APIs.postman_collection.json -e Dropbox_env.postman_environment.json -r htmlextra"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "newman": "^5.3.2"
-  }
+  "license": "ISC"
 }
